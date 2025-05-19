@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from .models import PricingPlan,Service, Contact,Indexmanage,Servicemanage,Pricingmanage,Project,Contactmanage,Aboutmanage,User,About,Corevalue
 from django.contrib import messages
 from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
 def home(request):
@@ -12,6 +13,27 @@ def home(request):
     indexmanagedetails = Indexmanage.objects.first()
     projectdetails = Project.objects.all()
 
+
+    if request.method== 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+       
+
+        subject = "New Contact Form Submission"
+        email_message = f"Name: {name}\n\nEmail: {email}\n\nMessage: {message}"
+        from_email = 'info.prime.estimating@gmail.com'
+        recipient_list = ['info.prime.estimating@gmail.com']  # Replace with your email
+        
+        try:
+            send_mail(subject, email_message, from_email, recipient_list)
+            messages.success(request, 'Your message has been sent successfully!')
+        except Exception as e:
+            messages.error(request, f"Failed to send email: {e}")
+
+
+        return redirect('home')
+       
     # if request.method== 'POST':
     #     name = request.POST.get('name')
     #     email = request.POST.get('email')

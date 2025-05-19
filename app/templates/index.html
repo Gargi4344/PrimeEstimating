@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baskervville:ital@0;1&family=Crimson+Pro:ital,wght@0,200..900;1,200..900&family=Gilda+Display&family=Libre+Bodoni:ital,wght@0,400..700;1,400..700&family=Oswald:wght@200..700&family=Pridi:wght@200;300;400;500;600;700&display=swap" rel="stylesheet"  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
   <link rel="icon" type="image/x-icon" href="{% static '/images/PE.png' %}">
@@ -615,6 +616,36 @@
     .call-btn:hover .phone-icon {
       animation-play-state: paused;
     }
+    #toast {
+          background-color: var(--primary-color);
+          color: var(--secondary-color);
+          padding: 15px;
+          border-radius: 4px;
+          position: fixed;
+          right: 20px;
+          top: 20px;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          border-left: 4px solid #22c55e;
+          animation: slideIn 0.5s ease-out;
+          /* Add these properties to ensure it stays on top */
+          z-index: 9999;
+          pointer-events: none; /* This allows clicking through the toast */
+      }
+
+      .checkmark {
+          background-color: #22c55e;
+          color: white;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+
   </style>
 </head>
 <body>
@@ -711,7 +742,7 @@
           <img src="{{aboutdetails.about_image.url}}" alt="Our Team" data-aos="fade-right" data-aos-duration="1000">
         </div>
         {%endif%}
-        <div class="about-text" data-aos="fade-left" data-aos-duration="1000">
+        <div class="about-text" >
           <!-- <p>At Prime Estimating, we are a team of experienced professionals dedicated to providing accurate and reliable construction estimating solutions. With years of industry expertise, we help our clients win more bids and maximize their project profitability.</p> -->
           <!-- <p>Our comprehensive approach to material takeoff, cost estimation, and project planning ensures that our clients have the necessary information to make informed decisions and successfully execute their construction projects.</p> -->
         <p>{{aboutdetails.story}}</p>
@@ -720,9 +751,28 @@
         </div>
       </div>
     </section>
+        <!-- notifications -->
+        {% for message in messages %}
+        <div id="toast">
+            <span>{{message}}</span>
+        </div>    
+        {% endfor %}
+    
+        <script>
+            setTimeout(function() {
+                document.getElementById("toast").style.display = "none";
+            }, 3000);
+        </script>
     <section id="contact" >
+
       <h2>Contact Us</h2>
-      <form data-aos="zoom-in" data-aos-duration="1000">
+      {% for message in messages %}
+      <h2>{{message}}</h2>
+       
+         
+      {% endfor %}
+      <form method="POST" data-aos="zoom-in" data-aos-duration="1000">
+        {%csrf_token%}
         <div class="form-group">
           <label for="name">Name</label>
           <input type="text" id="name" name="name" required>
